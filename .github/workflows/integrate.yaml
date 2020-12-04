@@ -1,0 +1,16 @@
+name: Leaderboard Python app continuous integration
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  print:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Printing a greeting
+        env:
+          MY_NAME: Cheech
+        run: |
+          echo My name is $MY_NAME
+
