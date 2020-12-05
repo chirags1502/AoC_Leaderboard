@@ -1,17 +1,12 @@
 import discord
 import requests
-from dotenv import load_dotenv
 import os
 from prettytable import PrettyTable
 
-
-
-load_dotenv()
 API_KEY = os.getenv('API_KEY')
-session_value = os.getenv('session')
+session_value = os.getenv('SESSION_COOKIE')
 cookie={'session': session_value}
-
-url = 'https://adventofcode.com/2020/leaderboard/private/view/1084621.json'
+url = os.getenv('LEADERBOARD_API_URL')
 
 client = discord.Client()
 

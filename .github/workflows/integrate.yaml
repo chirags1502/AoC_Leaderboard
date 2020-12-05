@@ -1,16 +1,50 @@
 name: Leaderboard Python app continuous integration
 
+env:
+  REGISTRY: "registry.digitalocean.com/leaderboard"
+  IMAGE_NAME: "leaderboard"
+  LEADERBOARD_JSON_URL: "https://adventofcode.com/2020/leaderboard/private/view/1084621.json"
 on:
   push:
     branches: [main]
 
 jobs:
-  print:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Printing a greeting
-        env:
-          MY_NAME: Cheech
-        run: |
-          echo My name is $MY_NAME
+      - name: Build container image
+        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+  
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Digital Ocean droplet via SSH action
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          HOST: ${{ secrets.HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          KEY: ${{ secrets.SSHKEY }}
+          envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,COMMAND,DISCORD_API_KEY,SESSION_COOKIE
+          script: |
+            # Stop running container
+            docker stop $(echo $IMAGE_NAME)
+
+            # Remove old container
+            docker rm $(echo $IMAGE_NAME)
+
+            # Run a new container from a new image
+            docker run -d \
+            --name $(echo $IMAGE_NAME) \
+            -e API_KEY=$(echo $DISCORD_API_KEY)
+            -e LEADERBOARD_API_URL=$(echo $LEADERBOARD_JSON_URL)
+            -e SESSION_COOKIE=$(echo $SESSION_COOKIE)
+            $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) $(echo $COMMAND)
 
