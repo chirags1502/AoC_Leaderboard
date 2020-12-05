@@ -35,4 +35,5 @@ async def on_message(message):
         except:
             await message.channel.send("Could not retreive the leaderboard")
         
+        
 client.run(API_KEY)
