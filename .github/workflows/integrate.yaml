@@ -37,6 +37,7 @@ jobs:
           PORT: ${{ secrets.PORT }}
           envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,COMMAND,DISCORD_API_KEY,SESSION_COOKIE
           script: |
+        
             # Stop running container
             docker stop $(echo $IMAGE_NAME)
 
@@ -51,3 +52,4 @@ jobs:
             -e SESSION_COOKIE=$(echo $SESSION_COOKIE)
             $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) $(echo $COMMAND)
 
+            
