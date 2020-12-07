@@ -53,16 +53,17 @@ jobs:
           script: |
             
             echo $SSH_CONNECTION
-            /snap/bin/docker
+            pwd
+            echo $PATH
             
             # Stop running container
-            docker stop $(echo $IMAGE_NAME)
+            /snap/bin/docker stop $(echo $IMAGE_NAME)
 
             # Remove old container
-            docker rm $(echo $IMAGE_NAME)
+            /snap/bin/docker rm $(echo $IMAGE_NAME)
 
             # Run a new container from a new image
-            docker run -d \
+            /snap/bin/docker run -d \
             --name $(echo $IMAGE_NAME) \
             -e API_KEY=$(echo $DISCORD_API_KEY)
             -e LEADERBOARD_API_URL=$(echo $LEADERBOARD_JSON_URL)
