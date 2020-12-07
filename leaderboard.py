@@ -7,9 +7,6 @@ API_KEY = os.getenv('API_KEY')
 cookie={'session': os.getenv('SESSION_COOKIE')}
 url = os.getenv('LEADERBOARD_API_URL')
 
-print(API_KEY,url)
-print(cookie)
-
 client = discord.Client()
 
 @client.event
@@ -33,7 +30,7 @@ async def on_message(message):
                 global_score = response['members'][key]['global_score']
                 player_id = response['members'][key]['id']
                 message_to_client.add_row([player_id,name,stars, global_score, local_score])
-            await message.channel.send(message_to_client.get_string(sortby="Stars",reversesort=True))
+            await message.channel.send("```"+message_to_client.get_string(sortby="Stars",reversesort=True)+"```")
         except:
             await message.channel.send("Could not retreive the leaderboard")
         
