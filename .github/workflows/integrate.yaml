@@ -26,6 +26,7 @@ jobs:
         run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
   
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       # - shell: bash
