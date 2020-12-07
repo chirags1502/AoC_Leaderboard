@@ -57,17 +57,17 @@ jobs:
             echo $PATH
             
             # Stop running container
-            /snap/bin/docker stop $(echo $IMAGE_NAME)
+            # /snap/bin/docker stop $(echo $IMAGE_NAME)
 
             # Remove old container
-            /snap/bin/docker rm $(echo $IMAGE_NAME)
+            # /snap/bin/docker rm $(echo $IMAGE_NAME)
 
             # Run a new container from a new image
             /snap/bin/docker run -d \
             --name $(echo $IMAGE_NAME) \
-            -e API_KEY=$(echo $DISCORD_API_KEY)
-            -e LEADERBOARD_API_URL=$(echo $LEADERBOARD_JSON_URL)
-            -e SESSION_COOKIE=$(echo $SESSION_COOKIE)
+            -e API_KEY=$(echo $DISCORD_API_KEY) \
+            -e LEADERBOARD_API_URL=$(echo $LEADERBOARD_JSON_URL) \
+            -e SESSION_COOKIE=$(echo $SESSION_COOKIE) \
             $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
 
             
