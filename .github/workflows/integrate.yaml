@@ -27,7 +27,7 @@ jobs:
   
   
   deploy:
-#     needs: build
+    needs: build
     runs-on: ubuntu-latest
     steps:
       # - shell: bash
@@ -53,11 +53,7 @@ jobs:
           envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,DISCORD_API_KEY,SESSION_COOKIE,LEADERBOARD_JSON_URL
           script: |
             
-            echo $SSH_CONNECTION
-            pwd
-            echo $PATH
-            
-            # Stop running container
+            # Stop running existing container
             /snap/bin/docker stop $(echo $IMAGE_NAME)
 
             # Remove old container
