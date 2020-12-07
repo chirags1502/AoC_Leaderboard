@@ -28,16 +28,16 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - shell: bash
-        env:
-          HOST: ${{ secrets.HOST }}
-          USERNAME: ${{ secrets.USERNAME }}
-          KEY: ${{ secrets.SSHKEY }}
-          PORT: ${{ secrets.PORT }}
-        run: |
-          echo $HOST
-          echo $USERNAME
-          echo $PORT
+      # - shell: bash
+      #   env:
+      #     HOST: ${{ secrets.HOST }}
+      #     USERNAME: ${{ secrets.USERNAME }}
+      #     KEY: ${{ secrets.SSHKEY }}
+      #     PORT: ${{ secrets.PORT }}
+      #   run: |
+      #     echo $HOST
+      #     echo $USERNAME
+      #     echo $PORT
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@v0.1.4
         with:
