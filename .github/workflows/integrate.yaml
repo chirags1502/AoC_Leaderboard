@@ -24,6 +24,8 @@ jobs:
         run: doctl registry login --expiry-seconds 600
       - name: Push image to DigitalOcean Container Registry
         run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+      - name: Pull image from DigitalOcean Container Registry
+        run: docker pull $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
   
   deploy:
     needs: build
@@ -39,6 +41,7 @@ jobs:
       #     echo $HOST
       #     echo $USERNAME
       #     echo $PORT
+      
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@v0.1.4
         with:
@@ -46,8 +49,11 @@ jobs:
           USERNAME: ${{ secrets.USERNAME }}
           KEY: ${{ secrets.SSHKEY }}
           PORT: ${{ secrets.PORT }}
-          envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,COMMAND,DISCORD_API_KEY,SESSION_COOKIE
+          envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,DISCORD_API_KEY,SESSION_COOKIE
           script: |
+            
+            echo $SSH_CONNECTION
+            /snap/bin/docker
             
             # Stop running container
             docker stop $(echo $IMAGE_NAME)
@@ -61,6 +67,6 @@ jobs:
             -e API_KEY=$(echo $DISCORD_API_KEY)
             -e LEADERBOARD_API_URL=$(echo $LEADERBOARD_JSON_URL)
             -e SESSION_COOKIE=$(echo $SESSION_COOKIE)
-            $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) $(echo $COMMAND)
+            $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
 
             
