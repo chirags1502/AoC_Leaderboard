@@ -29,19 +29,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Logging
-        uses: actions/github-script@v3
-        id: set-result
         with:
           HOST: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
           KEY: ${{ secrets.SSHKEY }}
           PORT: ${{ secrets.PORT }}
           envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,COMMAND,DISCORD_API_KEY,SESSION_COOKIE
-          script: |
+          run: |
             echo $HOST
             echo $USERNAME
             echo $PORT
-          result-encoding: string
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@v0.1.4
         with:
