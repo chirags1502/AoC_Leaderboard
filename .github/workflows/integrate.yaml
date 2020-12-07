@@ -9,26 +9,26 @@ on:
     branches: [main]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout master
-        uses: actions/checkout@v2
-      - name: Build container image
-        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 600
-      - name: Push image to DigitalOcean Container Registry
-        run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
-      - name: Pull image from DigitalOcean Container Registry
-        run: docker pull $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout master
+#         uses: actions/checkout@v2
+#       - name: Build container image
+#         run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+#       - name: Install doctl
+#         uses: digitalocean/action-doctl@v2
+#         with:
+#           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+#       - name: Log in to DigitalOcean Container Registry with short-lived credentials
+#         run: doctl registry login --expiry-seconds 600
+#       - name: Push image to DigitalOcean Container Registry
+#         run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+#       - name: Pull image from DigitalOcean Container Registry
+#         run: docker pull $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
   
   deploy:
-    needs: build
+#     needs: build
     runs-on: ubuntu-latest
     steps:
       # - shell: bash
@@ -61,13 +61,16 @@ jobs:
 
             # Remove old container
             # /snap/bin/docker rm $(echo $IMAGE_NAME)
-
+            
+            #docker pull
+            /snap/bin/docker pull $(echo $REGISTRY)/$(echo $IMAGE_NAME):e799fc6
+            
             # Run a new container from a new image
             /snap/bin/docker run -d \
             --name $(echo $IMAGE_NAME) \
             -e API_KEY=$(echo $DISCORD_API_KEY) \
             -e LEADERBOARD_API_URL=$(echo $LEADERBOARD_JSON_URL) \
             -e SESSION_COOKIE=$(echo $SESSION_COOKIE) \
-            $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+            $(echo $REGISTRY)/$(echo $IMAGE_NAME):e799fc6
 
             
