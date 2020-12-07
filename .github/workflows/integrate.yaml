@@ -4,6 +4,8 @@ env:
   REGISTRY: "registry.digitalocean.com/leaderboard"
   IMAGE_NAME: "leaderboard"
   LEADERBOARD_JSON_URL: "https://adventofcode.com/2020/leaderboard/private/view/1084621.json"
+  DISCORD_API_KEY: ${{ secrets.DISCORD_API_KEY }}
+  SESSION_COOKIE: ${{ secrets.LEADERBOARD_SESSION_COOKIE }}
 on:
   push:
     branches: [main]
@@ -43,13 +45,12 @@ jobs:
       
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@v0.1.4
+         
         with:
           HOST: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
           KEY: ${{ secrets.SSHKEY }}
           PORT: ${{ secrets.PORT }}
-          DISCORD_API_KEY: ${{ secrets.DISCORD_API_KEY }}
-          SESSION_COOKIE: ${{ secrets.LEADERBOARD_SESSION_COOKIE }}
           envs: IMAGE_NAME,REGISTRY,GITHUB_SHA,DISCORD_API_KEY,SESSION_COOKIE,LEADERBOARD_JSON_URL
           script: |
             
