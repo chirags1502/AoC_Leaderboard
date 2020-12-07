@@ -4,9 +4,11 @@ import os
 from prettytable import PrettyTable
 
 API_KEY = os.getenv('API_KEY')
-session_value = os.getenv('SESSION_COOKIE')
-cookie={'session': session_value}
+cookie={'session': os.getenv('SESSION_COOKIE')}
 url = os.getenv('LEADERBOARD_API_URL')
+
+print(API_KEY,url)
+print(cookie)
 
 client = discord.Client()
 
