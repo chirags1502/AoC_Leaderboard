@@ -57,10 +57,10 @@ jobs:
             echo $PATH
             
             # Stop running container
-            # /snap/bin/docker stop $(echo $IMAGE_NAME)
+            /snap/bin/docker stop $(echo $IMAGE_NAME)
 
             # Remove old container
-            # /snap/bin/docker rm $(echo $IMAGE_NAME)
+            /snap/bin/docker rm $(echo $IMAGE_NAME)
             
             #docker pull
             /snap/bin/docker pull $(echo $REGISTRY)/$(echo $IMAGE_NAME):e799fc6
